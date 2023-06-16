@@ -6,20 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock title %}</title>
     <link rel='stylesheet' href="{% static 'css/style.css' %}">
+    <script src="https://kit.fontawesome.com/a4117eb1fb.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <header>
-
+        
         <a class="button" href="{% url 'index' %}">Home</a>
         <a class="button" href="{% url 'about_us' %}">About us</a>
         <a class="button" href="{% url 'application_list' %}">Applications</a>
         {% if user.is_authenticated %}
-            <li class="user">
-                &#128100; {{ user.username }}
-            </li>
-            <li><a href="{% url 'logout' %}">Logout</a></li>
+            <a class="button"><i class="fa-solid fa-user-tie"></i> {{ user.username }}</a>
+            <a class="button" href="{% url 'logout' %}">Logout</a>
         {% else %}
-            <li><a href="{% url 'login' %}">Login</a></li>
+            <a class="button" href="{% url 'login' %}">Login</a>
         {% endif %}    
     </header>
     <main>
