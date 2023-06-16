@@ -96,13 +96,21 @@ class Employee(models.Model):
 
 
 class Application(models.Model):
-    CHOICES_TEMPLATES =(
-        (0, _("Vacation form")),
-        (1, _("Parent day-off form")),
-        (2, _("Termination form")),
-        (3, _("Taxes form")),
-        )
+    title = models.CharField(_("title"), max_length=50, db_index=True, blank=True, null=True)
+    description = models.TextField(_("description"), max_length=5000, db_index=True, blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("application")
+        verbose_name_plural = _("applications")
+
+    def __str__(self):
+        return f"{self.title} "
+
+    def get_absolute_url(self):
+        return reverse("application_detail", kwargs={"pk": self.pk})
     
+
+class ApplicationInstance(models.Model): 
     CHOICES_STATUS =(
         (0, _("New")),
         (1, _("Approved")),
@@ -111,26 +119,24 @@ class Application(models.Model):
     
     status = models.PositiveSmallIntegerField(_("status"), choices=CHOICES_STATUS, db_index=True, null=True, blank=True, default=0)
     date_created = models.DateField(_("date_created"), default=now)
-    template = models.PositiveSmallIntegerField(_("template"), choices=CHOICES_TEMPLATES, db_index=True)
     content = models.TextField(_("content"), null=True, blank=True) 
-
+    application = models.ForeignKey(
+        Application, 
+        verbose_name=_("application"), 
+        on_delete=models.CASCADE,
+        related_name='instances',
+        )
+    
     class Meta:
-        verbose_name = _("application")
-        verbose_name_plural = _("applications")
+        verbose_name = _("application_instance")
+        verbose_name_plural = _("application_instances")
 
     def __str__(self):
-        template = dict(Application.CHOICES_TEMPLATES)[self.template]
-        status = dict(Application.CHOICES_STATUS)[self.status]
-        return f"Application #{self.id}: {template}, {self.date_created}, {status}"
+        status = dict(ApplicationInstance.CHOICES_STATUS)[self.status]
+        return f"Application #{self.id}: {self.application}, {self.date_created}, {status}"
 
     def get_absolute_url(self):
-        return reverse("application_detail", kwargs={"pk": self.pk})
-
-    def get_application_form(self):
-        if self.template == 0:
-            self.content = "labas as atostogu forma"
-    
-
+        return reverse("application_instance_detail", kwargs={"pk": self.pk})
 
 
 
