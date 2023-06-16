@@ -13,6 +13,14 @@
         <a class="button" href="{% url 'index' %}">Home</a>
         <a class="button" href="{% url 'about_us' %}">About us</a>
         <a class="button" href="{% url 'application_list' %}">Applications</a>
+        {% if user.is_authenticated %}
+            <li class="user">
+                &#128100; {{ user.username }}
+            </li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+        {% endif %}    
     </header>
     <main>
         {% block content %}

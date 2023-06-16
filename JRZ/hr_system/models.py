@@ -109,9 +109,9 @@ class Application(models.Model):
         (2, _("Declined")),
         )
     
-    status = models.CharField(_("status"), max_length=50, choices=CHOICES_STATUS, db_index=True, null=True, blank=True)
+    status = models.PositiveSmallIntegerField(_("status"), choices=CHOICES_STATUS, db_index=True, null=True, blank=True, default=0)
     date_created = models.DateField(_("date_created"), default=now)
-    template = models.CharField(_("template"), max_length=50, choices=CHOICES_TEMPLATES, db_index=True)
+    template = models.PositiveSmallIntegerField(_("template"), choices=CHOICES_TEMPLATES, db_index=True)
     content = models.TextField(_("content"), null=True, blank=True) 
 
     class Meta:
@@ -119,7 +119,9 @@ class Application(models.Model):
         verbose_name_plural = _("applications")
 
     def __str__(self):
-        return self.name
+        template = dict(Application.CHOICES_TEMPLATES)[self.template]
+        status = dict(Application.CHOICES_STATUS)[self.status]
+        return f"Application #{self.id}: {template}, {self.date_created}, {status}"
 
     def get_absolute_url(self):
         return reverse("application_detail", kwargs={"pk": self.pk})
