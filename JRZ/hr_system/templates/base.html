@@ -9,8 +9,10 @@
 </head>
 <body>
     <header>
-        <a class="button" href="{% url 'index' %}">Home</a>
-        {% comment %} <a href="{% url 'my_forms' %}">my forms</a> {% endcomment %}
+
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'about_us' %}">About us</a>
+        <a href="{% url 'my_forms' %}">my forms</a>
     </header>
     <main>
         {% block content %}
