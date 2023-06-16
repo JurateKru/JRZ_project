@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Applications{% endblock title %}
+{% block content %}
+<h1>Please select application form:</h1>
+{% if application_list %}
+<ul>
+    <i style="border: 2px solid powderblue">Forms:</i>
+    <p></p>
+    {% for application in application_list %}
+        <li>
+            <strong><a href="{% url 'application_detail' application.pk %}">Application #{{ application.id }}: {{ application.template }}</a></strong>
+        </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No application forms found</p>
+{% endif %}
+{% endblock content %}
