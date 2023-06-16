@@ -12,7 +12,7 @@ class Manager(models.Model):
     l_name = models.CharField(_("last name"), max_length=50)
     email = models.EmailField(_("email"), max_length=254)
     hire_date = models.DateField(_("hire date"), auto_now=False, auto_now_add=False, default=now)
-    term_date = models.DateField(_("termination date"), auto_now=False)
+    term_date = models.DateField(_("termination date"), auto_now=False, null=True, blank=True)
 
     STATUS_ACTIVITY = (
         (0, _('Active')),
@@ -63,7 +63,7 @@ class Employee(models.Model):
     l_name = models.CharField(_("last name"), max_length=50)
     email = models.EmailField(_("email"), max_length=254)
     hire_date = models.DateField(_("hire date"), auto_now=False, auto_now_add=False, default=now)
-    term_date = models.DateField(_("termination date"), auto_now=False)
+    term_date = models.DateField(_("termination date"), auto_now=False, null=True, blank=True)
 
     STATUS_ACTIVITY = (
         (0, _('Active')),
