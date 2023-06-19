@@ -7,10 +7,10 @@
     <i style="border: 2px solid powderblue">Forms:</i>
     <p></p>
     {% for application in application_list %}
-        <li>
-            <strong>{{ application.title }}</strong>
-        </li>
-    {% endfor %}
+    <ul>
+        <li><a href="{% url 'vacation_form' application.pk %}">{{ application.title }}</a></li>
+    </ul>
+    {% endfor %} 
 </ul>
 {% else %}
 <p>No application forms found</p>

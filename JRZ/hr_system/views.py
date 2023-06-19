@@ -1,14 +1,17 @@
+from typing import Optional, Type
+from django.forms.models import BaseModelForm
 from django.shortcuts import render
 from django.views import generic
-from . models import Application
+from . models import Application, ApplicationInstance
 from django.db.models import Q
+from . forms import ApplicationInstanceForm
+from django.urls import reverse, reverse_lazy
 
 def index(request):
     return render(request, 'hr_system/index.html')
 
 def about_us(request):
     return render(request, 'hr_system/about_us.html')
-
 
 class ApplicationListView(generic.ListView):
     model = Application
@@ -25,3 +28,16 @@ class ApplicationListView(generic.ListView):
                 Q(status__icontains=query)                      
             )
         return qs
+
+class ApplicationFormView(generic.CreateView):
+    model = ApplicationInstance
+    form_class = ApplicationInstanceForm
+    template_name = 'hr_system/vacation.html'
+    success_url = reverse_lazy('application_list')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        obj = self.get_object()
+        initial['content'] = obj.application.description
+        return initial
+    
