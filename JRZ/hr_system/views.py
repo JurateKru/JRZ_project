@@ -32,7 +32,7 @@ class ApplicationListView(generic.ListView):
 class ApplicationFormView(generic.CreateView):
     model = ApplicationInstance
     form_class = ApplicationInstanceForm
-    template_name = 'hr_system/vacation.html'
+    template_name = 'hr_system/application_instance.html'
     success_url = reverse_lazy('application_list')
 
     def get_initial(self):

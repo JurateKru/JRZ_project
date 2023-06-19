@@ -10,7 +10,7 @@
     <p></p>
     {% for application in application_list %}
     <ul>
-        <li><a href="{% url 'vacation_form' application.pk %}">{{ application.title }}</a></li>
+        <li><a href="{% url 'application_instance' application.pk %}">{{ application.title }}</a></li>
     </ul>
     {% endfor %} 
 </ul>
