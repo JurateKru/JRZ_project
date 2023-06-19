@@ -2,7 +2,7 @@
 {% block title %}Vacation form{% endblock title %}
 {% block content %}
 <h3>Fill vacation form </h3>
-<form method="post" action="{{ request.path }}">
+<form enctype="multipart/form-data" method="post" action="{{ request.path }}">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Confirm</button>

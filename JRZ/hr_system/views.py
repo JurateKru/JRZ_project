@@ -1,6 +1,6 @@
 from typing import Optional, Type
 from django.forms.models import BaseModelForm
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from . models import Application, ApplicationInstance
 from django.db.models import Q
@@ -37,7 +37,8 @@ class ApplicationFormView(generic.CreateView):
 
     def get_initial(self):
         initial = super().get_initial()
-        obj = self.get_object()
-        initial['content'] = obj.application.description
+        obj = get_object_or_404(Application, pk=self.kwargs['pk'])
+        initial['content'] = obj.description
         return initial
+    
     
