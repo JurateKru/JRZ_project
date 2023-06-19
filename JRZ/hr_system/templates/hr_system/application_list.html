@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block stylesheet %}<link rel='stylesheet' href="{% static 'css/style.css' %}">{% endblock stylesheet %}
 {% block title %}Applications{% endblock title %}
 {% block content %}
 <h1>Please select application form:</h1>

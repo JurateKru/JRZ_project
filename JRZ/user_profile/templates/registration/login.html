@@ -1,15 +1,20 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block stylesheet %}<link rel='stylesheet' href="{% static 'css/style.css' %}">{% endblock stylesheet %}
+
 {% block title %}Login to {{ block.super }}{% endblock title %}
 {% block content %}
-<h1>Login to JRZ Personal Managment System </h1>
-{% if form.errors %}
-<p class="box box-error">Login error. Please try again.</p>
-{% endif %}
-<form method="post" action="{% url 'login' %}">
-{% csrf_token %}
-{{ form.as_p }}
-<p><button type="submit">Log in</button></p>
-</form>
-<p><a href="{% url 'password_reset' %}">Forgot password?</a></p>
-<p>If you do not have an account, you can sign up once the registration will be open.
+<div class="login-box">
+    <h1>Login to JRZ Personal Managment System </h1>
+    {% if form.errors %}
+    <p class="box box-error">Login error. Please try again.</p>
+    {% endif %}
+    <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p><button type="submit">Log in</button></p>
+    </form>
+    <p class="password-reset"><a href="{% url 'password_reset' %}">Forgot password?</a></p>
+    <p>If you do not have an account, you can sign up once the registration will be open.</p>
+</div>
 {% endblock content %}
