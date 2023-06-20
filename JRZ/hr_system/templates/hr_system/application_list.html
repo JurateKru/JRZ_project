@@ -7,7 +7,6 @@
 {% if application_list %}
 <ul>
     <i style="border: 2px solid powderblue">Forms:</i>
-    <p></p>
     {% for application in application_list %}
     <ul>
         <li><a href="{% url 'application_instance' application.pk %}">{{ application.title }}</a></li>

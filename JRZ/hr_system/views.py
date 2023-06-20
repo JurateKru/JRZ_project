@@ -19,6 +19,12 @@ class ApplicationListView(generic.ListView):
     model = Application
     template_name = 'hr_system/application_list.html'
 
+    # def context(self, **kwargs: Any):
+    #     # context = super().get_context_data(**kwargs)
+        
+    #     context = {'applications': Application.objects.all()}
+    #     return context
+
     def get_queryset(self):
         qs = super().get_queryset()
         query = self.request.GET.get('query')
@@ -37,6 +43,11 @@ class ApplicationFormView(generic.CreateView):
     template_name = 'hr_system/application_instance.html'
     success_url = reverse_lazy('application_list')
 
+    def get_context_data(self, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        context['application'] = self.get_application()
+        return context
+    
     # Get Aplications object by Application.id(passed throught urls.py)
     def get_application(self):
         return get_object_or_404(Application, pk=self.kwargs['pk'])
