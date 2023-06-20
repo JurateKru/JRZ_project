@@ -12,15 +12,15 @@ class Command(BaseCommand):
         user_without_profile = User.objects.filter(profile__isnull=True)
         created_profile_count = 0
         try:
-            for user in user_without_profile:
-                # user = User.objects.create(
-                #     username=empl_obj.f_name[0] + empl_obj.l_name, 
-                #     password=empl_obj.l_name,
-                #     email=empl_obj.email,
-                #     first_name=empl_obj.f_name,
-                #     last_name=empl_obj.l_name
-                #     )
-                # user.save()    
+            for empl_obj in empl_obj_without_profile:
+                user = User.objects.create(
+                    username=empl_obj.f_name[0] + empl_obj.l_name, 
+                    password=empl_obj.l_name,
+                    email=empl_obj.email,
+                    first_name=empl_obj.f_name,
+                    last_name=empl_obj.l_name
+                    )
+                user.save()    
                 profile = Profile(user=user)
                 profile.save()
                 
