@@ -6,7 +6,6 @@ from datetime import date
 from django.utils.timezone import now
 
 
-
 class Manager(models.Model):
     f_name = models.CharField(_("first name"), max_length=50)
     l_name = models.CharField(_("last name"), max_length=50)
@@ -136,87 +135,3 @@ class ApplicationInstance(models.Model):
     def get_absolute_url(self):
         return reverse("application_instance_detail", kwargs={"pk": self.pk})
     
-
-# class Vacation(models.Model):
-#     start_date = models.DateField(_("start_date"), auto_now=False, null=True, blank=True)
-#     end_date = models.DateField(_("end_date"), auto_now=False,null=True, blank=True)
-#     payout_before = models.BooleanField(_("payout_before"))
-#     application = models.ForeignKey(Application, verbose_name=_("application"), on_delete=models.CASCADE)
-    
-#     class Meta:
-#         verbose_name = _("vacation")
-#         verbose_name_plural = _("vacations")
-
-#     def __str__(self):
-#         return f"Start date: {self.start_date}, End date: {self.end_date}, Payout before vacation {self.payout_before}"
-
-#     def get_absolute_url(self):
-#         return reverse("vacation_detail", kwargs={"pk": self.pk})
-    
-#     @property
-#     def get(self):
-#         return [self.start_date, self.end_date, self.payout_before]
-    
-# class ParentDayOff(models.Model):
-#     start_date = models.DateField(_("start_date"), auto_now=False, null=True, blank=True)
-#     end_date = models.DateField(_("end_date"), auto_now=False,null=True, blank=True)    
-#     CHOICES =(
-#         (0, _("Raising 1 child under 12 years old")),
-#         (1, _("Raising 2 or more children under 12 years old")),
-#         (2, _("Raising 3 or more children under 12 years old")),
-#         (3, _("Raising 1 child with disabilities")),
-#         (4, _("Raising 2 or more children with disabilities"))
-#         )    
-#     parental_status = models.PositiveSmallIntegerField(_("parental_status"), choices=CHOICES, db_index=True, null=True, blank=True, default=0)
-#     application = models.ForeignKey(Application, verbose_name=_("application"), on_delete=models.CASCADE)
-
-#     class Meta:
-#         verbose_name = _("parent day-off")
-#         verbose_name_plural = _("parent day-offs")
-
-#     def __str__(self):
-#         return f"Start date: {self.start_date}, End date: {self.end_date}, Parental status: {self.parental_status}"
-
-#     def get_absolute_url(self):
-#         return reverse("parent_day_off_detail", kwargs={"pk": self.pk})
-    
-#     @property
-#     def get(self):
-#         return [self.start_date, self.end_date, self.parental_status]
-    
-# class Termination(models.Model):
-#     terminate_date = models.DateField(_("terminate_date"), auto_now=False, null=True, blank=True)
-#     application = models.ForeignKey(Application, verbose_name=_("application"), on_delete=models.CASCADE)
-
-#     class Meta:
-#         verbose_name = _("termination")
-#         verbose_name_plural = _("terminations")
-
-#     def __str__(self):
-#         return self.terminate_date
-
-#     def get_absolute_url(self):
-#         return reverse("termination_detail", kwargs={"pk": self.pk})
-
-
-# class Taxes(models.Model):
-#     npd = models.BooleanField(_("npd"))
-#     start_date = models.DateField(_("start_date"), auto_now=False, null=True, blank=True)
-#     application = models.ForeignKey(Application, verbose_name=_("application"), on_delete=models.CASCADE)
-
-#     class Meta:
-#         verbose_name = _("taxes")
-#         verbose_name_plural = _("taxes")
-
-#     def __str__(self):
-#         return f"Start date{self.start_date}, Aplly NPD{self.npd}"
-
-#     def get_absolute_url(self):
-#         return reverse("taxes_detail", kwargs={"pk": self.pk})
-
-
-
-
-
-
-
