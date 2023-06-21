@@ -12,6 +12,8 @@ from . models import Application, ApplicationInstance
 from . forms import ApplicationInstanceForm
 from user_profile.models import Profile
 from . process import html_to_pdf
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models.query import QuerySet
 
 from io import BytesIO
 from django.http import HttpResponse
@@ -145,6 +147,7 @@ class ApplicationFormView(generic.CreateView):
         instance.save()
         
         form.instance.content = self.generate_description(form.cleaned_data)
+        form.instance.applicant = self.request.user
         return super().form_valid(form)
 
     # Populates form with values(user inputs)
@@ -174,4 +177,27 @@ class ApplicationFormView(generic.CreateView):
 
         return description
     
+class UserApplicationListView(LoginRequiredMixin, generic.ListView):
+    model = ApplicationInstance
+    template_name = 'hr_system/user_application_instances.html'   
+
+    def get_queryset(self) -> QuerySet[Any]:
+        qs = super().get_queryset()
+        qs = qs.filter(applicant=self.request.user)
+        return qs
     
+    def get_context_data(self, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        context['user_applications'] = ApplicationInstance.objects.filter(applicant=self.request.user)
+        return context
+    
+
+class UserApplicationDetailView(LoginRequiredMixin, generic.DetailView):
+    model = ApplicationInstance
+    template_name = 'hr_system/user_application_detail.html' 
+
+    def get_context_data(self, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        obj = get_object_or_404(ApplicationInstance, id=self.kwargs['pk'])
+        context['date_created'] = obj.date_created
+        return context

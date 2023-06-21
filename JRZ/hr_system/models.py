@@ -133,6 +133,14 @@ class ApplicationInstance(models.Model):
         on_delete=models.CASCADE,
         related_name='instances',
         )
+    applicant = models.ForeignKey(
+        User,
+        verbose_name=_("applicant"),
+        on_delete=models.CASCADE,
+        related_name="applicant_instances",
+        null=True, blank=True,
+        )
+
     
     class Meta:
         verbose_name = _("application_instance")
@@ -140,7 +148,7 @@ class ApplicationInstance(models.Model):
 
     def __str__(self):
         status = dict(ApplicationInstance.CHOICES_STATUS)[self.status]
-        return f"Application #{self.id}: {self.application}, {self.date_created}, {status}"
+        return f"Application #{self.id}: {self.application}, {self.date_created},  {status}"
 
     def get_absolute_url(self):
         return reverse("application_instance_detail", kwargs={"pk": self.pk})

@@ -8,6 +8,8 @@ urlpatterns = [
     path('application/instance/<int:pk>', views.ApplicationFormView.as_view(), name='application_instance'),
     path('export_pdf', views.export_pdf, name='export_pdf'),
     path('create_pdf', views.render_pdf_view, name='createPDF'),
+    path('application/my_application/', views.UserApplicationListView.as_view(), name='user_application_instances'),
+    path('application/my_application/<int:pk>', views.UserApplicationDetailView.as_view(), name='user_application_detail'),
 ]
 
 # user_application_instances/user_instance/<int:pk>/
