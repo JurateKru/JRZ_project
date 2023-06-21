@@ -10,6 +10,7 @@ class Command(BaseCommand):
     def handle(self, *args: Any, **options: Any) -> str | None:
         empl_obj_without_profile = Employee.objects.filter(employee_profile__isnull=True)
         user_without_profile = User.objects.filter(profile__isnull=True)
+        empl_obj_with_profile = Employee.objects.all()
         created_profile_count = 0
         try:
             for empl_obj in empl_obj_without_profile:
@@ -21,7 +22,7 @@ class Command(BaseCommand):
                     last_name=empl_obj.l_name
                     )
                 user.save()    
-                profile = Profile(user=user)
+                profile = Profile(user=user, employee=empl_obj)
                 profile.save()
                 
                 created_profile_count += 1
