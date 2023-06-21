@@ -23,7 +23,11 @@ class Profile(models.Model):
         editable=False,
         null=True, blank=True,
     )
-    
+    @property
+    def manager(self):
+        if self.employee:
+            return self.employee.department.manager
+        return None
 
     class Meta:
         verbose_name = _("profile")
@@ -44,8 +48,4 @@ class Profile(models.Model):
                 pic.thumbnail(new_size)
                 pic.save(self.picture.path)
     
-    @property
-    def manager(self):
-        if self.employee:
-            return self.employee.department.manager
-        return None
+    
