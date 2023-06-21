@@ -3,7 +3,11 @@ from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_protect
+from django.utils.timezone import now
 from . forms import ProfileUpdateForm, UserUpdateForm
+from . models import Profile
+from hr_system.models import Employee
+
 
 User = get_user_model()
 
@@ -62,6 +66,16 @@ def signup(request):
             )
             user.set_password(password)
             user.save()
+            employee = Employee.objects.create(
+                f_name=first_name,
+                l_name=last_name,
+                email=email,
+                user=user
+            )
+            employee.save()
+            
+            profile = Profile(user=user, employee=employee)
+            profile.save()
             messages.success(request, "User registration successful!")
             return redirect('login')
     return render(request, 'user_profile/signup.html')

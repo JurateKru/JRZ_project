@@ -20,8 +20,10 @@ class Profile(models.Model):
         verbose_name=_("employee profile"), 
         on_delete=models.CASCADE,
         related_name='employee_profile',
+        editable=False,
         null=True, blank=True,
     )
+    
 
     class Meta:
         verbose_name = _("profile")
@@ -41,3 +43,9 @@ class Profile(models.Model):
                 new_size = (300, 300)
                 pic.thumbnail(new_size)
                 pic.save(self.picture.path)
+    
+    @property
+    def manager(self):
+        if self.employee:
+            return self.employee.department.manager
+        return None

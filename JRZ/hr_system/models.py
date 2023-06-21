@@ -1,10 +1,12 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 from tinymce.models import HTMLField
 from datetime import date
 from django.utils.timezone import now
 
+User = get_user_model()
 
 class Manager(models.Model):
     f_name = models.CharField(_("first name"), max_length=50)
@@ -80,8 +82,16 @@ class Employee(models.Model):
         verbose_name=_("department"), 
         on_delete=models.CASCADE,
         related_name='employees',
+        null=True, blank=True,
     )
-
+    user = models.ForeignKey(
+        User,
+        verbose_name=("user_profile"),
+        on_delete=models.CASCADE,
+        related_name='users',
+        null=True,
+        blank=True
+    )
 
     class Meta:
         verbose_name = _("employee")
