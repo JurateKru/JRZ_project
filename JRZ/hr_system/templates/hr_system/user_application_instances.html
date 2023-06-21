@@ -8,8 +8,8 @@
     {% if user_applications %}
     <ul>
         {% for application in user_applications %}
-            <li><a href="{% url 'user_application_detail' application.pk %}">Application: #{{ application.id }}</a>
-                <br><em>Created date -<em> {{ application.date_created }}<br> Status - 
+            <li><a href="{% url 'user_application_detail' application.pk %}">Application: #{{ application.id }} {{ application.application}}</a>
+                <br><i> Status - </i>
                 {% if application.status == 0 %} 
                 <span style="color: blue;"> New</span>
                 {% elif application.status == 1 %} 
