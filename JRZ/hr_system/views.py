@@ -199,5 +199,5 @@ class UserApplicationDetailView(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs: Any):
         context = super().get_context_data(**kwargs)
         obj = get_object_or_404(ApplicationInstance, id=self.kwargs['pk'])
-        context['date_created'] = obj.date_created
+        context['application'] = obj
         return context
