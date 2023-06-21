@@ -10,8 +10,7 @@ html {
 }
 
 body {
-    display: grid;
-    grid-template-areas: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-areas: repeat(auto-fill, minmax(100px, 1fr));
     width: 100%;
     height: 100vh;
     background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url(img/banner.jpg);
@@ -20,21 +19,8 @@ body {
 
 }
 
-.content h1,
-.content h2,
-.content h3,
-.content li {
-    color: white; 
 
-}
-
-h1,
-h2,
-h3,
-p,
-i,
-a,
-li {
+.content {
     color: white;  
 }
 
@@ -47,7 +33,10 @@ li {
     padding: 20px 20px 20px 20px;
     background-color: #95c9fa;
     opacity: 0.75;
+    
 }
+
+
 .top-header .button:nth-child(5) {  /* Logout-button */
     grid-area: 1/14;
 }
