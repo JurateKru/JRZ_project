@@ -98,7 +98,7 @@ class Employee(models.Model):
         verbose_name_plural = _("employees")
 
     def __str__(self):
-        return f"{self.f_name} "
+        return f"{self.f_name} {self.l_name} "
 
     def get_absolute_url(self):
         return reverse("employee_detail", kwargs={"pk": self.pk})

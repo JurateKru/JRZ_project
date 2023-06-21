@@ -9,6 +9,7 @@ from django.urls import reverse, reverse_lazy
 from django import forms
 from . models import Application, ApplicationInstance
 from . forms import ApplicationInstanceForm
+from user_profile.models import Profile
 
 
 User = get_user_model()
@@ -49,6 +50,9 @@ class ApplicationFormView(generic.CreateView):
     # Get Aplications object by Application.id(passed throught urls.py)
     def get_application(self):
         return get_object_or_404(Application, pk=self.kwargs['pk'])
+    
+    def get_user_profile(self):
+        return Profile.objects.filter(user=self.request.user).get()
 
     # Create initial form instance populate with needed fields 
     def get_form(self, form_class= form_class) -> BaseModelForm:
@@ -58,12 +62,15 @@ class ApplicationFormView(generic.CreateView):
         form.fields['start_date'] = forms.DateField(label=_("Start Date"), widget=forms.widgets.DateInput(
     attrs={'type': 'date', 'placeholder': 'yyyy-mm-dd (DOB)', 'class': 'form-control'}))
         form.fields['manager'] = forms.CharField(label=_("manager"))
-        form.fields['full_name'] = forms.CharField(label=_("full name"))
+        
         
         if self.request.user.is_authenticated:
+            
+            form.fields['manager'] = forms.CharField(label=_("manager"), widget=forms.HiddenInput(), required=False)
             form.fields['full_name'] = forms.CharField(label=_("full name"), widget=forms.HiddenInput(), required=False)
         else:
             form.fields['full_name'] = forms.CharField(label=_("full name"))
+            form.fields['manager'] = forms.CharField(label=_("manager"))
 
 
         if self.get_application().title == "Vacation": # Atostogos
@@ -127,7 +134,9 @@ class ApplicationFormView(generic.CreateView):
                     locals()[key] = 'netaikyti'
             if self.request.user.is_authenticated:    
                 if key == 'full_name':
-                    locals()[key] = self.request.user.first_name + ' ' + self.request.user.last_name
+                    locals()[key] =  self.get_user_profile().employee.f_name + ' ' + self.get_user_profile().employee.l_name  # self.request.user.first_name + ' ' + self.request.user.last_name
+                if key == 'manager':
+                    locals()[key] = self.get_user_profile().manager.f_name + ' ' + self.get_user_profile().manager.l_name
         # print(locals())
     
         # **locals() syntax, which unpacks the dynamically created variables as keyword arguments.
