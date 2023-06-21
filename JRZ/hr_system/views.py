@@ -117,6 +117,7 @@ class ApplicationFormView(generic.CreateView):
         instance.save()
         
         form.instance.content = self.generate_description(form.cleaned_data)
+        form.instance.applicant = self.request.user
         return super().form_valid(form)
 
     # Populates form with values(user inputs)
@@ -155,3 +156,18 @@ class UserApplicationListView(LoginRequiredMixin, generic.ListView):
         qs = qs.filter(applicant=self.request.user)
         return qs
     
+    def get_context_data(self, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        context['user_applications'] = ApplicationInstance.objects.filter(applicant=self.request.user)
+        return context
+    
+
+class UserApplicationDetailView(LoginRequiredMixin, generic.DetailView):
+    model = ApplicationInstance
+    template_name = 'hr_system/user_application_detail.html' 
+
+    def get_context_data(self, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        obj = get_object_or_404(ApplicationInstance, id=self.kwargs['pk'])
+        context['date_created'] = obj.date_created
+        return context

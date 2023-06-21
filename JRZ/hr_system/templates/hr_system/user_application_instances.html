@@ -1,19 +1,29 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block stylesheet %}<link rel='stylesheet' href="{% static 'css/style.css' %}">{% endblock stylesheet %}
-{% block title %}Applications{% endblock title %}
+{% block title %}My applications{% endblock title %}
 {% block content %}
-<h1>Please select application form:</h1>
-{% if application_list %}
-<ul>
-    <i style="border: 2px solid powderblue">Forms:</i>
-    {% for application in application_list %}
+<div class= "content">
+    <h1>My applications</h1>
+    {% if user_applications %}
     <ul>
-        <li><a href="{% url 'application_instance' application.pk %}">{{ application.title }}</a></li>
+        {% for application in user_applications %}
+            <li><a href="{% url 'user_application_detail' application.pk %}">Application: #{{ application.id }}</a>
+                <br><em>Created date -<em> {{ application.date_created }}<br> Status - 
+                {% if application.status == 0 %} 
+                <span style="color: blue;"> New</span>
+                {% elif application.status == 1 %} 
+                <span style="color: green;">Approved</span>
+                {% elif application.status == 2 %} 
+                <span style="color: red;">Declined</span>
+                {% else %}
+                {% endif %}
+            </li>
+        {% endfor %} 
     </ul>
-    {% endfor %} 
-</ul>
-{% else %}
-<p>No application forms found</p>
-{% endif %}
+    {% else %}
+    <p>No application forms found</p>
+    {% endif %}
+
 {% endblock content %}
+</div>
