@@ -13,6 +13,7 @@
             <a {% if request.resolver_match.url_name == 'index' %}class="button active"{% else %}class="button"{% endif %} href="{% url 'index' %}">Home</a>
             <a {% if request.resolver_match.url_name == 'about_us' %}class="button active"{% else %}class="button"{% endif %} href="{% url 'about_us' %}">About us</a>
             <a {% if request.resolver_match.url_name == 'application_list' %}class="button active"{% else %}class="button"{% endif %} href="{% url 'application_list' %}">Applications</a>
+            <a {% if request.resolver_match.url_name == 'user_application_instances' %}class="button active"{% else %}class="button"{% endif %} href="{% url 'user_application_instances' %}">My Applications</a>
             {% if user.is_authenticated %}
                 <a class="button" href="/admin"><i class="fa-solid fa-user-tie"></i> {{ user.username }}</a>
                 <a class="button" href="{% url 'logout' %}">Logout</a>

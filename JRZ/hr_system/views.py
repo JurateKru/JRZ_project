@@ -10,6 +10,8 @@ from django import forms
 from . models import Application, ApplicationInstance
 from . forms import ApplicationInstanceForm
 from user_profile.models import Profile
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models.query import QuerySet
 
 
 User = get_user_model()
@@ -144,4 +146,12 @@ class ApplicationFormView(generic.CreateView):
 
         return description
     
+class UserApplicationListView(LoginRequiredMixin, generic.ListView):
+    model = ApplicationInstance
+    template_name = 'hr_system/user_application_instances.html'   
+
+    def get_queryset(self) -> QuerySet[Any]:
+        qs = super().get_queryset()
+        qs = qs.filter(applicant=self.request.user)
+        return qs
     

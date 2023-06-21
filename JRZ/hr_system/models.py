@@ -133,6 +133,14 @@ class ApplicationInstance(models.Model):
         on_delete=models.CASCADE,
         related_name='instances',
         )
+    applicant = models.ForeignKey(
+        User,
+        verbose_name=_("applicant"),
+        on_delete=models.CASCADE,
+        related_name="application_instances",
+        null=True, blank=True,
+        )
+
     
     class Meta:
         verbose_name = _("application_instance")
