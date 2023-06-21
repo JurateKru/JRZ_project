@@ -3,11 +3,15 @@ from django.utils.translation import gettext_lazy as _
 from django.forms.models import BaseModelForm
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
-from . models import Application, ApplicationInstance
 from django.db.models import Q
-from . forms import ApplicationInstanceForm
+from django.contrib.auth import get_user_model
 from django.urls import reverse, reverse_lazy
 from django import forms
+from . models import Application, ApplicationInstance
+from . forms import ApplicationInstanceForm
+
+
+User = get_user_model()
 
 def index(request):
     return render(request, 'hr_system/index.html')
@@ -18,12 +22,6 @@ def about_us(request):
 class ApplicationListView(generic.ListView):
     model = Application
     template_name = 'hr_system/application_list.html'
-
-    # def context(self, **kwargs: Any):
-    #     # context = super().get_context_data(**kwargs)
-        
-    #     context = {'applications': Application.objects.all()}
-    #     return context
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -56,25 +54,35 @@ class ApplicationFormView(generic.CreateView):
     def get_form(self, form_class= form_class) -> BaseModelForm:
         form = super().get_form(form_class)
         
-        if self.get_application().title == "Vacation": # Atostogos
-            form.fields['start_date'] = forms.DateField(label=_("Start Date"))
-            form.fields['end_date'] = forms.DateField(label=_("End Date"))
+        # initial fields
+        form.fields['start_date'] = forms.DateField(label=_("Start Date"), widget=forms.widgets.DateInput(
+    attrs={'type': 'date', 'placeholder': 'yyyy-mm-dd (DOB)', 'class': 'form-control'}))
+        form.fields['manager'] = forms.CharField(label=_("manager"))
+        form.fields['full_name'] = forms.CharField(label=_("full name"))
+        
+        if self.request.user.is_authenticated:
+            form.fields['full_name'] = forms.CharField(label=_("full name"), widget=forms.HiddenInput(), required=False)
+        else:
             form.fields['full_name'] = forms.CharField(label=_("full name"))
-            form.fields['manager'] = forms.CharField(label=_("manager"))
+
+
+        if self.get_application().title == "Vacation": # Atostogos
+            form.fields['end_date'] = forms.DateField(label=_("End Date"), widget=forms.widgets.DateInput(
+        attrs={'type': 'date', 'placeholder': 'yyyy-mm-dd (DOB)', 'class': 'form-control'}))
             form.fields['payout_before'] = forms.ChoiceField(label=_("Payment"), choices=(
                 ("along with the regular salary payment", _("along with the regular salary payment")), 
                 ("before requested vacation leave", _("before the requested vacation leave")), ))
+            # form.fields['start_date'] = forms.DateField(label=_("Start Date"))
+            # form.fields['full_name'] = forms.CharField(label=_("full name"))
+            # form.fields['manager'] = forms.CharField(label=_("manager"))
         
         if self.get_application().title == "Taxes": # Mokesciai
             form.fields['npd'] = forms.BooleanField(label=_("npd"), required=False)
-            form.fields['start_date'] = forms.DateField(label=_("start_date"))
-            form.fields['full_name'] = forms.CharField(label=_("full name"))
-            form.fields['manager'] = forms.CharField(label=_("manager"))
+            # form.fields['start_date'] = forms.DateField(label=_("start_date"))
+            # form.fields['full_name'] = forms.CharField(label=_("full name"))
+            # form.fields['manager'] = forms.CharField(label=_("manager"))
 
         if self.get_application().title == "Parent Day-off":
-            form.fields['full_name'] = forms.CharField(label=_("full name"))
-            form.fields['manager'] = forms.CharField(label=_("manager"))
-            form.fields['start_date'] = forms.DateField(label=_("Start Date"))
             form.fields['parental_status'] = forms.ChoiceField(label=_("Parental Day-off"), choices=(
         ("I am raising 1 child under 12 years old", _("Raising 1 child under 12 years old")),
         ("I am raising 2 or more children under 12 years old", _("Raising 2 or more children under 12 years old")),
@@ -82,11 +90,15 @@ class ApplicationFormView(generic.CreateView):
         ("I am raising 1 child with disabilities", _("Raising 1 child with disabilities")),
         ("I am raising 2 or more children with disabilities", _("Raising 2 or more children with disabilities"))
         ) )
+            # form.fields['full_name'] = forms.CharField(label=_("full name"))
+            # form.fields['manager'] = forms.CharField(label=_("manager"))
+            # form.fields['start_date'] = forms.DateField(label=_("Start Date"))
         
         if self.get_application().title == "Terminate":
-            form.fields['full_name'] = forms.CharField(label=_("full name"))
-            form.fields['manager'] = forms.CharField(label=_("manager"))
-            form.fields['start_date'] = forms.DateField(label=_("Start Date"))
+            return form
+            # form.fields['full_name'] = forms.CharField(label=_("full name"))
+            # form.fields['manager'] = forms.CharField(label=_("manager"))
+            # form.fields['start_date'] = forms.DateField(label=_("Start Date"))
         return form
 
     # gets populated form, passes throught generate_description() returns form with values
@@ -103,7 +115,7 @@ class ApplicationFormView(generic.CreateView):
         form = self.get_form(self.form_class)
         
         template = self.get_application().description
-
+        
         # Dynamically create multiple variables
         for key in form.fields.keys():
 
@@ -113,7 +125,10 @@ class ApplicationFormView(generic.CreateView):
                     locals()[key] = 'taikyti'
                 else:
                     locals()[key] = 'netaikyti'
-        #print(locals())
+            if self.request.user.is_authenticated:    
+                if key == 'full_name':
+                    locals()[key] = self.request.user.first_name + ' ' + self.request.user.last_name
+        # print(locals())
     
         # **locals() syntax, which unpacks the dynamically created variables as keyword arguments.
         description = template.format(**locals())
