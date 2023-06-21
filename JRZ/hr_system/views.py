@@ -6,11 +6,17 @@ from django.views import generic
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.urls import reverse, reverse_lazy
+from django.http import HttpResponse, FileResponse
 from django import forms
 from . models import Application, ApplicationInstance
 from . forms import ApplicationInstanceForm
 from user_profile.models import Profile
+from . process import html_to_pdf
 
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa 
 
 User = get_user_model()
 
@@ -19,6 +25,30 @@ def index(request):
 
 def about_us(request):
     return render(request, 'hr_system/about_us.html')
+
+def export_pdf(request):
+    return render(request, 'hr_system/export_pdf.html')
+
+def render_pdf_view(request):
+    template_path = 'hr_system/export_pdf.html'
+
+    context = {'myvar': 'this is your template context'}
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type='application/pdf')
+
+    response['Content-Disposition'] = 'filename="report.pdf"'
+    # find the template and render it.
+    template = get_template(template_path)
+    
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+    html, dest=response)
+    # if error then show some funny view
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
 
 class ApplicationListView(generic.ListView):
     model = Application
