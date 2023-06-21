@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block stylesheet %}<link rel='stylesheet' href="{% static 'css/style.css' %}">{% endblock stylesheet %}
+{% block title %}My applications{% endblock title %}
+{% block content %}
+<div class= "content">
+<h1>My applications</h1>
+<ul>
+    <li>{{ date_created }}</li>
+</ul>
+<p>No application forms found</p>
+</div>
+{% endblock content %}
