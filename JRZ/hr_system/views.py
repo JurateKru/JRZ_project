@@ -14,35 +14,53 @@ from user_profile.models import Profile
 from . process import html_to_pdf
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
+from django.contrib.auth.decorators import login_required
 
 from io import BytesIO
 from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa 
+from django.template.loader import render_to_string
 
 User = get_user_model()
 
 def index(request):
     return render(request, 'hr_system/index.html')
 
+
 def about_us(request):
     return render(request, 'hr_system/about_us.html')
 
-def export_pdf(request):
-    return render(request, 'hr_system/export_pdf.html')
 
-def render_pdf_view(request):
-    template_path = 'hr_system/export_pdf.html'
+class ExportPdfView(generic.DetailView):
+    model= ApplicationInstance 
+    template_name= f"hr_system/export_pdf.html"
+    
+    def get_context_data(self, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        context['application'] = get_object_or_404(ApplicationInstance, id=self.kwargs['pk'])
+        return context
 
-    context = {'myvar': 'this is your template context'}
+
+def render_pdf_view(request, **kwargs):
+    obj = get_object_or_404(ApplicationInstance, id=kwargs['pk'])
+    #obj = get_object_or_404(Application, pk=kwargs['pk'])
+    # obj_profile = Profile.objects.filter(user=request.user).get()
+
+    template_path = f"hr_system/export_pdf.html"
+    
+    
+
+    context = {'application': obj}
     # Create a Django response object, and specify content_type as pdf
     response = HttpResponse(content_type='application/pdf')
 
     response['Content-Disposition'] = 'filename="report.pdf"'
     # find the template and render it.
-    template = get_template(template_path)
+    #template = get_template(template_path)
     
-    html = template.render(context)
+    html = render_to_string(template_path, context)
+    #html = template.render(context)
 
     # create a pdf
     pisa_status = pisa.CreatePDF(
@@ -51,6 +69,7 @@ def render_pdf_view(request):
     if pisa_status.err:
         return HttpResponse('We had some errors <pre>' + html + '</pre>')
     return response
+
 
 class ApplicationListView(generic.ListView):
     model = Application
@@ -198,6 +217,5 @@ class UserApplicationDetailView(LoginRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs: Any):
         context = super().get_context_data(**kwargs)
-        obj = get_object_or_404(ApplicationInstance, id=self.kwargs['pk'])
-        context['application'] = obj
+        context['application'] = get_object_or_404(ApplicationInstance, id=self.kwargs['pk'])
         return context

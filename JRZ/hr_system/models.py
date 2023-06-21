@@ -105,7 +105,7 @@ class Employee(models.Model):
 
 class Application(models.Model):
     title = models.CharField(_("title"), max_length=50, db_index=True, blank=True, null=True)
-    description = models.TextField(_("description"), max_length=5000, db_index=True, blank=True, null=True)
+    description = HTMLField(_("description"), max_length=5000, db_index=True, blank=True, null=True)
     class Meta:
         verbose_name = _("application")
         verbose_name_plural = _("applications")
@@ -126,7 +126,7 @@ class ApplicationInstance(models.Model):
     
     status = models.PositiveSmallIntegerField(_("status"), choices=CHOICES_STATUS, db_index=True, null=True, blank=True, default=0)
     date_created = models.DateField(_("date_created"), default=now)
-    content = models.TextField(_("content"), null=True, blank=True) 
+    content = HTMLField(_("content"), null=True, blank=True) 
     application = models.ForeignKey(
         Application, 
         verbose_name=_("application"), 
