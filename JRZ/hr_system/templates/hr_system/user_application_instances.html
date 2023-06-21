@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block stylesheet %}<link rel='stylesheet' href="{% static 'css/style.css' %}">{% endblock stylesheet %}
+{% block title %}Applications{% endblock title %}
+{% block content %}
+<h1>Please select application form:</h1>
+{% if application_list %}
+<ul>
+    <i style="border: 2px solid powderblue">Forms:</i>
+    {% for application in application_list %}
+    <ul>
+        <li><a href="{% url 'application_instance' application.pk %}">{{ application.title }}</a></li>
+    </ul>
+    {% endfor %} 
+</ul>
+{% else %}
+<p>No application forms found</p>
+{% endif %}
+{% endblock content %}
