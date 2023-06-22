@@ -3,6 +3,7 @@
 {% block stylesheet %}<link rel='stylesheet' href="{% static 'css/style.css' %}">{% endblock stylesheet %}
 {% block title %}Department applications{% endblock title %}
 {% block content %}
+<div class= "content">
 <form method="post" action="{{ request.path }}" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
