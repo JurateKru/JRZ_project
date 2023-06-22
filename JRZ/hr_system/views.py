@@ -1,26 +1,21 @@
-from typing import Any, Optional, Type
 from django.utils.translation import gettext_lazy as _
 from django.forms.models import BaseModelForm
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
 from django.contrib.auth import get_user_model
-from django.urls import reverse, reverse_lazy
-from django.http import HttpResponse, FileResponse
+from django.urls import reverse_lazy
+from django.http import HttpResponse
 from django import forms
-from . models import Application, ApplicationInstance, Employee
-from . forms import ApplicationInstanceForm
-from user_profile.models import Profile, ManagerProfile
-from . process import html_to_pdf
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
-from django.contrib.auth.decorators import login_required
-
-from io import BytesIO
 from django.http import HttpResponse
-from django.template.loader import get_template
-from xhtml2pdf import pisa 
 from django.template.loader import render_to_string
+from . models import Application, ApplicationInstance
+from . forms import ApplicationInstanceForm, ApplicationInstanceUpdateForm
+from user_profile.models import Profile, ManagerProfile
+from xhtml2pdf import pisa
+from typing import Any
 
 User = get_user_model()
 
@@ -44,12 +39,8 @@ class ExportPdfView(generic.DetailView):
 
 def render_pdf_view(request, **kwargs):
     obj = get_object_or_404(ApplicationInstance, id=kwargs['pk'])
-    #obj = get_object_or_404(Application, pk=kwargs['pk'])
-    # obj_profile = Profile.objects.filter(user=request.user).get()
 
     template_path = f"hr_system/export_pdf.html"
-    
-    
 
     context = {'application': obj}
     # Create a Django response object, and specify content_type as pdf
@@ -57,7 +48,6 @@ def render_pdf_view(request, **kwargs):
 
     response['Content-Disposition'] = 'filename="report.pdf"'
     # find the template and render it.
-    #template = get_template(template_path)
     
     html = render_to_string(template_path, context)
     #html = template.render(context)
@@ -114,15 +104,12 @@ class ApplicationFormView(generic.CreateView):
     attrs={'type': 'date', 'placeholder': 'yyyy-mm-dd (DOB)', 'class': 'form-control'}))
         form.fields['manager'] = forms.CharField(label=_("manager"))
         
-        
         if self.request.user.is_authenticated:
-            
             form.fields['manager'] = forms.CharField(label=_("manager"), widget=forms.HiddenInput(), required=False)
             form.fields['full_name'] = forms.CharField(label=_("full name"), widget=forms.HiddenInput(), required=False)
         else:
             form.fields['full_name'] = forms.CharField(label=_("full name"))
             form.fields['manager'] = forms.CharField(label=_("manager"))
-
 
         if self.get_application().title == "Vacation": # Atostogos
             form.fields['end_date'] = forms.DateField(label=_("End Date"), widget=forms.widgets.DateInput(
@@ -130,15 +117,9 @@ class ApplicationFormView(generic.CreateView):
             form.fields['payout_before'] = forms.ChoiceField(label=_("Payment"), choices=(
                 ("along with the regular salary payment", _("along with the regular salary payment")), 
                 ("before requested vacation leave", _("before the requested vacation leave")), ))
-            # form.fields['start_date'] = forms.DateField(label=_("Start Date"))
-            # form.fields['full_name'] = forms.CharField(label=_("full name"))
-            # form.fields['manager'] = forms.CharField(label=_("manager"))
         
         if self.get_application().title == "Taxes": # Mokesciai
-            form.fields['npd'] = forms.BooleanField(label=_("npd"), required=False)
-            # form.fields['start_date'] = forms.DateField(label=_("start_date"))
-            # form.fields['full_name'] = forms.CharField(label=_("full name"))
-            # form.fields['manager'] = forms.CharField(label=_("manager"))
+            form.fields['npd'] = forms.BooleanField(label=_("npd"), required=False) 
 
         if self.get_application().title == "Parent Day-off":
             form.fields['parental_status'] = forms.ChoiceField(label=_("Parental Day-off"), choices=(
@@ -148,15 +129,10 @@ class ApplicationFormView(generic.CreateView):
         ("I am raising 1 child with disabilities", _("Raising 1 child with disabilities")),
         ("I am raising 2 or more children with disabilities", _("Raising 2 or more children with disabilities"))
         ) )
-            # form.fields['full_name'] = forms.CharField(label=_("full name"))
-            # form.fields['manager'] = forms.CharField(label=_("manager"))
-            # form.fields['start_date'] = forms.DateField(label=_("Start Date"))
+            
         
         if self.get_application().title == "Terminate":
             return form
-            # form.fields['full_name'] = forms.CharField(label=_("full name"))
-            # form.fields['manager'] = forms.CharField(label=_("manager"))
-            # form.fields['start_date'] = forms.DateField(label=_("Start Date"))
         return form
 
     # gets populated form, passes throught generate_description() returns form with values
@@ -230,10 +206,19 @@ class DepartmentApplicationListView(LoginRequiredMixin, generic.ListView):
         qs = super().get_queryset()
         qs = qs.filter(applicant__employee__in=department_employees)
         return qs
+       
+class DepartmentApplicationUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = ApplicationInstance
+    form_class = ApplicationInstanceUpdateForm
+    template_name = 'hr_system/update_application_detail.html'
+    success_url = reverse_lazy('department_application_instances')
     
-    # def get_context_data(self, **kwargs: Any):
-    #     context = super().get_context_data(**kwargs)
-    #     user_profile = ManagerProfile.objects.get(user=self.request.user)
-    #     department_employees = user_profile.employees.all()
-    #     context['user_applications'] = ApplicationInstance.objects.filter(applicant__employee__in=department_employees)
-    #     return context    
+    def get_initial(self):
+        initial = super().get_initial()
+        obj = self.get_object()
+        initial["content"] = obj.content
+        initial["date_created"] = obj.date_created
+        initial["status"] = obj.status
+        return initial
+
+    

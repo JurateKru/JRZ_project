@@ -12,6 +12,11 @@ class ApplicationInstanceForm(forms.ModelForm):
 
         widgets = {
             'content': forms.HiddenInput(), 
-            # 'date_created': forms.HiddenInput(),
             'full_name': forms.HiddenInput(),     
         }
+
+
+class ApplicationInstanceUpdateForm(forms.ModelForm):
+    class Meta:
+        model = models.ApplicationInstance
+        fields = ['content', 'date_created', 'status']

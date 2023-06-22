@@ -15,5 +15,8 @@
         <li>{{ application.date_created }}</li>
     </ul> 
     <a class='button' href="{% url 'createPDF' application.pk%}">Export pdf</a>
+    {% if user.is_staff %}
+    <a class='button' href="{% url 'update_application_instance' application.pk %}">Update Form</a>
+    {% endif %}
 </div>
 {% endblock content %}
