@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% block title %}{{ application.title|lower }} form{% endblock title %}
 {% block content %}
+<div class= "content">
 <h3>Fill {{ application.title|lower }} form </h3>
 <form enctype="multipart/form-data" method="post" action="{{ request.path }}">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Confirm</button>
 </form>
-  
+</div> 
 {% endblock content %}
