@@ -64,18 +64,12 @@ class ManagerProfile(models.Model):
         related_name='manager_profile',
         null=True, blank=True,
     )
-    @property
-    def get_department(self):
-        if self.manager:
-            return Department.objects.filter(manager=self.manager).get()
-
-
 
     @property
     def employees(self):
         if self.manager:
-            obj=Employee.objects.filter(department=self.get_department)
-            return obj
+            employees = Employee.objects.filter(department=self.manager.department).all()
+            return employees
         return None
 
     class Meta:

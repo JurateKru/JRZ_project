@@ -225,10 +225,10 @@ class DepartmentApplicationListView(LoginRequiredMixin, generic.ListView):
     template_name = 'hr_system/department_application_instances.html'   
 
     def get_queryset(self) -> QuerySet[Any]:
-        user_profile = ManagerProfile.objects.get(user=self.request.user)
-        department_employees = user_profile.employees.all().values_list('user', flat=True)
+        manager_profile = get_object_or_404(ManagerProfile, user=self.request.user)
+        department_employees = manager_profile.employees
         qs = super().get_queryset()
-        qs = qs.filter(applicant__in=department_employees)
+        qs = qs.filter(applicant__employee__in=department_employees)
         return qs
     
     # def get_context_data(self, **kwargs: Any):
