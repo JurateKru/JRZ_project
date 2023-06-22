@@ -4,6 +4,7 @@
 
 {% block title %}Login to {{ block.super }}{% endblock title %}
 {% block content %}
+<div class= "requests">
 <div class="login-box">
     <h1>Login to JRZ Personal Managment System </h1>
     {% if form.errors %}
@@ -14,7 +15,8 @@
     {{ form.as_p }}
     <p><button type="submit">Log in</button></p>
     </form>
-    <p class="password-reset"><a href="{% url 'password_reset' %}">Forgot password?</a></p>
-    <p>If you do not have an account, please <a href="{% url 'signup' %}">sign up</a>.</p>
+    <p class="password-reset"><a href="{% url 'password_reset' %}"><strong>Forgot password?</strong></a></p>
+    <p>If you do not have an account, please <a href="{% url 'signup' %}"><strong>sign up</strong></a>.</p>
+</div>
 </div>
 {% endblock content %}

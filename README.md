@@ -1,7 +1,5 @@
 # JRZ_project
 
-![jrz_logo](../JRZ/hr_system/static/css/img/jrz.png)
-
 JRZ_project is a web-based HR system that allows managers to track and manage employee applications within their departments.It provides a user-friendly interface for employees to submit applications, while managers can review and handle them efficiently.
 
 # Installation Requirements

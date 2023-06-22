@@ -3,18 +3,18 @@
 {% block stylesheet %}<link rel='stylesheet' href="{% static 'css/style.css' %}">{% endblock stylesheet %}
 {% block title %}My applications{% endblock title %}
 {% block content %}
-<div class= "content">
+<div class= "requests">
     <h1>My applications</h1>
     {% if application %}
     <ul>
         <li>Application: #{{ application.id }} {{ application.application}}
             <br><i> Status - </i>
             {% if application.status == 0 %} 
-            <span style="color: blue;"> New</span>
+            <span style="color: rgb(8, 61, 184);"><strong> New</strong></span>
             {% elif application.status == 1 %} 
-            <span style="color: green;">Approved</span>
+            <span style="color: green;"><strong> Approved</strong></span>
             {% elif application.status == 2 %} 
-            <span style="color: red;">Declined</span>
+            <span style="color: rgb(151, 5, 5);"><strong> Declined</strong></span>
             {% else %}               
             {% endif %}
             <br><i> Date created - </i> {{  application.date_created }}
@@ -29,9 +29,12 @@
     {% else %}
     <p>No application forms found</p>
     {% endif %}
-    <a class='button' href="{% url 'createPDF' application.pk%}">Export pdf</a>
+    <div class="parent-element">
+    <a class='button' href="{% url 'createPDF' application.pk%}"><strong>Export pdf</strong></a>
     {% if user.is_staff %}
-    <a class='button' href="{% url 'update_application_instance' application.pk %}">Update Form</a>
+    <a class='button' href="{% url 'update_application_instance' application.pk %}"><strong>Update Form<strong></a>
     {% endif %}
 </div>
+</div>
+
 {% endblock content %}
