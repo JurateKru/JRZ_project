@@ -10,7 +10,7 @@ from django.http import HttpResponse, FileResponse
 from django import forms
 from . models import Application, ApplicationInstance, Employee
 from . forms import ApplicationInstanceForm
-from user_profile.models import Profile
+from user_profile.models import Profile, ManagerProfile
 from . process import html_to_pdf
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
@@ -225,13 +225,15 @@ class DepartmentApplicationListView(LoginRequiredMixin, generic.ListView):
     template_name = 'hr_system/department_application_instances.html'   
 
     def get_queryset(self) -> QuerySet[Any]:
+        user_profile = ManagerProfile.objects.get(user=self.request.user)
+        department_employees = user_profile.employees.all().values_list('user', flat=True)
         qs = super().get_queryset()
-        qs = qs.filter(manager__profile=self.request.user)
+        qs = qs.filter(applicant__in=department_employees)
         return qs
     
-    def get_context_data(self, **kwargs: Any):
-        context = super().get_context_data(**kwargs)
-        user_profile = Profile.objects.get(user=self.request.user)
-        department_employees = Employee.objects.filter(department=user_profile.manager.department)
-        context['user_applications'] = ApplicationInstance.objects.filter(applicant__employee__in=department_employees)
-        return context    
+    # def get_context_data(self, **kwargs: Any):
+    #     context = super().get_context_data(**kwargs)
+    #     user_profile = ManagerProfile.objects.get(user=self.request.user)
+    #     department_employees = user_profile.employees.all()
+    #     context['user_applications'] = ApplicationInstance.objects.filter(applicant__employee__in=department_employees)
+    #     return context    

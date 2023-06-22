@@ -64,23 +64,23 @@ class ManagerProfile(models.Model):
         related_name='manager_profile',
         null=True, blank=True,
     )
-    # @property
-    # def get_department(self):
-    #     if self.manager:
-    #         return Department.objects.filter(manager=self.manager).get()
+    @property
+    def get_department(self):
+        if self.manager:
+            return Department.objects.filter(manager=self.manager).get()
 
 
 
-    # @property
-    # def employees(self):
-    #     if self.manager:
-    #         obj=Employee.objects.filter(department=self.get_department)
-    #         return obj
-    #     return None
+    @property
+    def employees(self):
+        if self.manager:
+            obj=Employee.objects.filter(department=self.get_department)
+            return obj
+        return None
 
     class Meta:
-        verbose_name = _("profile")
-        verbose_name_plural = _("profiles")
+        verbose_name = _("manager profile")
+        verbose_name_plural = _("manager profiles")
 
     def __str__(self):
         return str(self.user)
