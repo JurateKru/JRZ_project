@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponse, FileResponse
 from django import forms
-from . models import Application, ApplicationInstance
+from . models import Application, ApplicationInstance, Employee
 from . forms import ApplicationInstanceForm
 from user_profile.models import Profile
 from . process import html_to_pdf
@@ -219,3 +219,19 @@ class UserApplicationDetailView(LoginRequiredMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
         context['application'] = get_object_or_404(ApplicationInstance, id=self.kwargs['pk'])
         return context
+    
+class DepartmentApplicationListView(LoginRequiredMixin, generic.ListView):
+    model = ApplicationInstance
+    template_name = 'hr_system/department_application_instances.html'   
+
+    def get_queryset(self) -> QuerySet[Any]:
+        qs = super().get_queryset()
+        qs = qs.filter(manager__profile=self.request.user)
+        return qs
+    
+    def get_context_data(self, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        user_profile = Profile.objects.get(user=self.request.user)
+        department_employees = Employee.objects.filter(department=user_profile.manager.department)
+        context['user_applications'] = ApplicationInstance.objects.filter(applicant__employee__in=department_employees)
+        return context    

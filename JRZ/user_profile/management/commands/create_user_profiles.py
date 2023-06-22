@@ -1,8 +1,8 @@
 from typing import Any, Optional
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth import get_user_model
-from user_profile.models import Profile
-from hr_system.models import Employee
+from user_profile.models import Profile, ManagerProfile
+from hr_system.models import Employee, Manager
 
 User = get_user_model()
 
@@ -11,9 +11,11 @@ class Command(BaseCommand):
         empl_obj_without_profile = Employee.objects.filter(employee_profile__isnull=True)
         user_without_profile = User.objects.filter(profile__isnull=True)
         empl_obj_with_profile = Employee.objects.all()
+
+        manager_obj_without_profile = Manager.objects.filter(manager_profile__isnull=True)
         created_profile_count = 0
         try:
-            for empl_obj in empl_obj_without_profile:
+            for empl_obj in manager_obj_without_profile:
                 user = User.objects.create(
                     username=empl_obj.f_name[0] + empl_obj.l_name,
                     email=empl_obj.email,
@@ -23,7 +25,7 @@ class Command(BaseCommand):
                 user.set_password(empl_obj.l_name)
                 user.save()
 
-                profile = Profile(user=user, employee=empl_obj)
+                profile = ManagerProfile(user=user, manager=empl_obj)
                 profile.save()
                 
                 created_profile_count += 1
