@@ -136,6 +136,7 @@ class ApplicationInstance(models.Model):
     status = models.PositiveSmallIntegerField(_("status"), choices=CHOICES_STATUS, db_index=True, null=True, blank=True, default=0)
     date_created = models.DateField(_("date_created"), default=now)
     content = HTMLField(_("content"), null=True, blank=True) 
+    comment = models.TextField(_("comment"), max_length=500, db_index=True, blank=True, null=True)
     application = models.ForeignKey(
         Application, 
         verbose_name=_("application"), 

@@ -17,9 +17,13 @@
             <span style="color: red;">Declined</span>
             {% else %}               
             {% endif %}
-            <br><i> Date created - </i> {{  application.date_created}}
-            <br><i> Applicant - </i> {{  application.applicant.first_name}} {{  application.applicant.last_name}}
-            <br><i> Manager - </i> {{  application.applicant.employee.department.manager}}
+            <br><i> Date created - </i> {{  application.date_created }}
+            <br><i> Applicant - </i> {{  application.applicant.first_name }} {{  application.applicant.last_name }}
+            <br><i> Manager - </i> {{  application.applicant.employee.department.manager }}
+            <br><i> Department - </i> {{  application.applicant.employee.department }}
+            {% if not application.comment == None %}
+                <br><i> Comment - </i> {{  application.comment }}
+            {% endif %}
         </li>
     </ul>
     {% else %}
