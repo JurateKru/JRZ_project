@@ -27,6 +27,15 @@ class Manager(models.Model):
         db_index=True
     )
 
+    user = models.ForeignKey(
+        User,
+        verbose_name=("user_profile"),
+        on_delete=models.CASCADE,
+        related_name='manager_users',
+        null=True,
+        blank=True
+    )
+
     class Meta:
         verbose_name = _("manager")
         verbose_name_plural = _("managers")

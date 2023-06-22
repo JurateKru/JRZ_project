@@ -10,6 +10,7 @@ urlpatterns = [
     path('create_pdf/<int:pk>', views.render_pdf_view, name='createPDF'),
     path('application/my_application/', views.UserApplicationListView.as_view(), name='user_application_instances'),
     path('application/my_application/<int:pk>', views.UserApplicationDetailView.as_view(), name='user_application_detail'),
+    path('application/department_application/', views.DepartmentApplicationListView.as_view(), name='department_application_instances'),
 ]
 
 # user_application_instances/user_instance/<int:pk>/
