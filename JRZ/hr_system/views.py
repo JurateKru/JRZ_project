@@ -230,10 +230,4 @@ class DepartmentApplicationListView(LoginRequiredMixin, generic.ListView):
         qs = super().get_queryset()
         qs = qs.filter(applicant__employee__in=department_employees)
         return qs
-    
-    # def get_context_data(self, **kwargs: Any):
-    #     context = super().get_context_data(**kwargs)
-    #     user_profile = ManagerProfile.objects.get(user=self.request.user)
-    #     department_employees = user_profile.employees.all()
-    #     context['user_applications'] = ApplicationInstance.objects.filter(applicant__employee__in=department_employees)
-    #     return context    
+

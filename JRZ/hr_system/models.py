@@ -41,7 +41,7 @@ class Manager(models.Model):
         verbose_name_plural = _("managers")
 
     def __str__(self):
-        return f"{self.f_name} {self.l_name} {self.email}"
+        return f"{self.f_name} {self.l_name}"
 
     def get_absolute_url(self):
         return reverse("manager_detail", kwargs={"pk": self.pk})
