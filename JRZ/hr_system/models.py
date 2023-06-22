@@ -49,11 +49,11 @@ class Manager(models.Model):
 
 class Department(models.Model):
     name = models.CharField(_("name"), max_length=250)
-    manager = models.ForeignKey(
+    manager = models.OneToOneField(
         Manager, 
         verbose_name=_("manager"), 
         on_delete=models.CASCADE,
-        related_name='departments'
+        related_name='department'
     )
     
 
@@ -93,11 +93,11 @@ class Employee(models.Model):
         related_name='employees',
         null=True, blank=True,
     )
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         User,
-        verbose_name=("user_profile"),
+        verbose_name=_("user"),
         on_delete=models.CASCADE,
-        related_name='users',
+        related_name='employee',
         null=True,
         blank=True
     )
