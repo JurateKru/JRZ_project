@@ -5,10 +5,11 @@ from django.utils.translation import gettext_lazy as _
 class DateInput(forms.DateInput):
     input_type = 'date'
 
+
 class ApplicationInstanceForm(forms.ModelForm):
     class Meta:
         model = models.ApplicationInstance
-        fields = ['content', 'date_created']
+        fields = ['content', 'date_created', 'comment']
 
         widgets = {
             'content': forms.HiddenInput(), 
@@ -19,4 +20,4 @@ class ApplicationInstanceForm(forms.ModelForm):
 class ApplicationInstanceUpdateForm(forms.ModelForm):
     class Meta:
         model = models.ApplicationInstance
-        fields = ['content', 'date_created', 'status']
+        fields = ['status', 'comment']
