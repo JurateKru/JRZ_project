@@ -3,17 +3,28 @@
 {% block stylesheet %}<link rel='stylesheet' href="{% static 'css/style.css' %}">{% endblock stylesheet %}
 {% block title %}My applications{% endblock title %}
 {% block content %}
-
 <div class= "content">
     <h1>My applications</h1>
-    <h1>{{ application.content }}</h1>
+    {% if application %}
     <ul>
-        <li>{{ application.date_created }}</li>
-        <li>{{ application.date_created }}</li>
-        <li>{{ application.date_created }}</li>
-        <li>{{ application.date_created }}</li>
-        <li>{{ application.date_created }}</li>
-    </ul> 
+        <li>Application: #{{ application.id }} {{ application.application}}
+            <br><i> Status - </i>
+            {% if application.status == 0 %} 
+            <span style="color: blue;"> New</span>
+            {% elif application.status == 1 %} 
+            <span style="color: green;">Approved</span>
+            {% elif application.status == 2 %} 
+            <span style="color: red;">Declined</span>
+            {% else %}               
+            {% endif %}
+            <br><i> Date created - </i> {{  application.date_created}}
+            <br><i> Applicant - </i> {{  application.applicant.first_name}} {{  application.applicant.last_name}}
+            <br><i> Manager - </i> {{  application.applicant.employee.department.manager}}
+        </li>
+    </ul>
+    {% else %}
+    <p>No application forms found</p>
+    {% endif %}
     <a class='button' href="{% url 'createPDF' application.pk%}">Export pdf</a>
 </div>
 {% endblock content %}
