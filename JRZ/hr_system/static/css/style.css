@@ -21,9 +21,7 @@ body {
     display: flex;
     flex-direction: column;
 }
-main {
-    flex-grow: 1;
-}
+
 
 .content {
     color: rgb(18, 17, 17);
@@ -97,6 +95,8 @@ main {
     text-decoration: none;
     border-radius: 8px;
     transition: all 0.3s ease;
+    margin-left: 15px;
+    
   }
   
   .top-header .button:hover,
