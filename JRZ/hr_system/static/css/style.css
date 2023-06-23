@@ -73,10 +73,10 @@ main {
 
 .top-header {
     
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    text-align: center;
-    justify-content: center;
+    display: inline-flex;
+    /* grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); */
+    text-align: right;
+    justify-content: right;
     padding: 20px 20px 20px 20px;
     background-color: #95c9fa;
     opacity: 0.75;
@@ -84,25 +84,10 @@ main {
 }
 
 
-.top-header .button:nth-child(5) {  /* Logout-button */
-    grid-area: 1/14;
+.top-header .button:nth-child(4) {  /* Logout-button */
+    margin-right: 40%;
 }
 
-.top-header .button:nth-child(4){ /* User-button */
-    grid-area: 1/13;
-}
-
-.top-header .button:nth-child(1){ /* Home-button */
-    grid-area: 1/5;
-}
-
-.top-header .button:nth-child(3){ /* About-button */
-    grid-area: 1/7;
-}
-
-.top-header .button:nth-child(2){ /* Applications-button */
-    grid-area: 1/6;
-}
 
 .button {
     justify-items: right;
