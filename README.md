@@ -40,4 +40,4 @@ By following these steps, you will ensure that all the necessary dependencies fo
 
 * JurateKru
 * kobrius11
-* JurateKru
+* TapuTap
